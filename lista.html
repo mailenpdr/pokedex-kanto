@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pokémon Guardados - Tu caja del tesoro 💎</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="title-glow">📦 Pokémon Guardados</h1>
+    <a href="index.html" class="btn-link">← Volver al inicio</a>
+  </header>
+
+  <main>
+    <section id="guardados" class="resultado animate-popIn"></section>
+  </main>
+
+  <footer>
+    <p>Guardados con amor y código limpio 💖</p>
+  </footer>
+
+  <script>
+    const guardados = JSON.parse(localStorage.getItem('guardados')) || [];
+    const contenedor = document.getElementById('guardados');
+
+    function mostrarGuardados() {
+      contenedor.innerHTML = '';
+      if (guardados.length === 0) {
+        contenedor.innerHTML = `<p class="empty-message">No has guardado ningún Pokémon todavía 🥺</p>`;
+        return;
+      }
+
+      guardados.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'pokemon-card animate-popIn';
+
+        card.innerHTML = `
+          <img src="${p.imagen}" alt="${p.nombre}" />
+          <h2>${p.nombre}</h2>
+          <p><strong>Tipo:</strong> ${p.tipos.join(', ')}</p>
+          <p><strong>Altura:</strong> ${(p.altura / 10).toFixed(2)} m</p>
+          <p><strong>Peso:</strong> ${(p.peso / 10).toFixed(2)} kg</p>
+          <button class="btn-eliminar" data-index="${index}">Eliminar ❌</button>
+        `;
+
+        contenedor.appendChild(card);
+      });
+
+      document.querySelectorAll('.btn-eliminar').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const i = e.target.dataset.index;
+          guardados.splice(i, 1);
+          localStorage.setItem('guardados', JSON.stringify(guardados));
+          mostrarGuardados();
+        });
+      });
+    }
+
+    mostrarGuardados();
+  </script>
+</body>
+</html>
+
